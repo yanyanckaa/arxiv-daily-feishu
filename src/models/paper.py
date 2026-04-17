@@ -28,4 +28,8 @@ class PaperBriefAnalysis(BaseModel):
     overview: str = Field(description="一句话概括核心贡献，约 40–80 字")
     motivation: str = Field(description="研究问题，约 60–120 字")
     method: str = Field(description="方法要点，约 60–120 字")
+    deep_reading: str = Field(
+        default="",
+        description="仔细阅读结论：基于全文章节的关键洞察，约 80–160 字",
+    )
     takeaway: str = Field(description="读者可带走的一点启发或适用场景，约 40–100 字")

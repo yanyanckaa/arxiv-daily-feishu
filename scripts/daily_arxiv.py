@@ -11,27 +11,20 @@
 from __future__ import annotations
 
 import argparse
-import asyncio
-import logging
 import sys
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.config.proxy import apply_proxy_env  # noqa: E402
-from src.pipeline.daily import run_daily  # noqa: E402
+from src.__main__ import run_cli  # noqa: E402
 
 
 def main() -> None:
-    apply_proxy_env()
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s %(message)s",
-    )
+    # 兼容旧脚本入口，避免与 `python -m src` 逻辑漂移。
     parser = argparse.ArgumentParser(description="arXiv 每日简报 → 飞书")
     parser.parse_args()
-    code = asyncio.run(run_daily())
+    code = run_cli()
     sys.exit(code)
 
 

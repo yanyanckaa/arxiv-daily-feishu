@@ -11,7 +11,7 @@ from src.config.proxy import apply_proxy_env
 from src.pipeline.daily import run_daily
 
 
-def main() -> None:
+def run_cli() -> int:
     apply_proxy_env()
     logging.basicConfig(
         level=logging.INFO,
@@ -19,7 +19,11 @@ def main() -> None:
     )
     parser = argparse.ArgumentParser(description="arXiv 每日简报 → 飞书")
     parser.parse_args()
-    sys.exit(asyncio.run(run_daily()))
+    return asyncio.run(run_daily())
+
+
+def main() -> None:
+    sys.exit(run_cli())
 
 
 if __name__ == "__main__":

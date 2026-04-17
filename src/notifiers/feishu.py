@@ -42,6 +42,7 @@ def build_card(
                 f"**概述** {_escape_md(analysis.overview)}\n\n"
                 f"**问题** {_escape_md(analysis.motivation)}\n\n"
                 f"**方法** {_escape_md(analysis.method)}\n\n"
+                f"**精读** {_escape_md(analysis.deep_reading)}\n\n"
                 f"**要点** {_escape_md(analysis.takeaway)}"
             )
         else:

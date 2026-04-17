@@ -9,25 +9,44 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-def load_seen_ids(path: Path) -> set[str]:
+def load_seen_id_list(path: Path) -> list[str]:
+    """按文件顺序读取 seen ids（新 -> 旧）。"""
     if not path.exists():
-        return set()
+        return []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
         if isinstance(data, list):
-            return set(str(x) for x in data)
+            out: list[str] = []
+            seen: set[str] = set()
+            for x in data:
+                sid = str(x)
+                if sid not in seen:
+                    seen.add(sid)
+                    out.append(sid)
+            return out
         if isinstance(data, dict) and "ids" in data:
-            return set(str(x) for x in data["ids"])
+            out = []
+            seen = set()
+            for x in data["ids"]:
+                sid = str(x)
+                if sid not in seen:
+                    seen.add(sid)
+                    out.append(sid)
+            return out
     except (OSError, json.JSONDecodeError) as e:
         logger.warning("读取 seen_ids 失败 %s: %s", path, e)
-    return set()
+    return []
+
+
+def load_seen_ids(path: Path) -> set[str]:
+    return set(load_seen_id_list(path))
 
 
 def append_seen_ids(path: Path, ids: list[str], *, max_keep: int = 8000) -> None:
     if not ids:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
-    current = list(load_seen_ids(path))
+    current = load_seen_id_list(path)
     merged: list[str] = []
     seen: set[str] = set()
     for i in ids + current:
